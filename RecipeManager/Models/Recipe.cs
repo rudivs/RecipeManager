@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace RecipeManager.Models
@@ -20,7 +21,7 @@ namespace RecipeManager.Models
         [JsonProperty(PropertyName = "notes")]
         public string Notes { get; set; }
 
-        [JsonProperty(PropertyName = "ownerId")]
-        public string OwnerId { get; set; }
+        [JsonProperty(PropertyName = "userId")]
+        public string UserId { get; set; }
     }
 }
