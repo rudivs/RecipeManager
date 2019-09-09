@@ -3,47 +3,51 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.Azure.Cosmos;
-using Microsoft.Azure.Cosmos.Linq;
+using Microsoft.Azure.Documents;
+using Microsoft.Azure.Documents.Client;
 using RecipeManager.Models;
 
 namespace RecipeManager.Services
 {
     public class RecipeDbService : IRecipeDbService
     {
-        private readonly Container _container;
+        private readonly string _dbName;
+        private readonly string _collectionName;
+        private readonly DocumentClient _client;
         private readonly string _partitionKeyPath = "/id";
 
-        public RecipeDbService(CosmosClient dbClient, string dbName, string recipeContainer)
+        private Uri CollectionUri => UriFactory.CreateDocumentCollectionUri(_dbName, _collectionName);
+
+        public RecipeDbService(DocumentClient dbClient, string dbName, string recipeContainer)
         {
-            var response = dbClient.CreateDatabaseIfNotExistsAsync(dbName).GetAwaiter().GetResult();
-            response.Database.CreateContainerIfNotExistsAsync(recipeContainer, _partitionKeyPath).GetAwaiter().GetResult();
-            _container = dbClient.GetContainer(dbName, recipeContainer);
+            _dbName = dbName;
+            _collectionName = recipeContainer;
+            _client = dbClient;
+            _client.CreateDatabaseIfNotExistsAsync(new Database { Id = _dbName }).GetAwaiter().GetResult();
+            DocumentCollection collectionDefinition = new DocumentCollection
+            {
+                Id = _collectionName
+            };
+            collectionDefinition.PartitionKey.Paths.Add(_partitionKeyPath);
+            _client.CreateDocumentCollectionIfNotExistsAsync(UriFactory.CreateDatabaseUri(dbName), collectionDefinition).GetAwaiter().GetResult();
         }
 
         public async Task<List<Recipe>> GetRecipesAsync()
         {
-            var iterator =
-                _container.GetItemQueryIterator<Recipe>(
-                    new QueryDefinition("SELECT * FROM Recipes WHERE Recipes.documentType = 'Recipe'"));
-            var results = new List<Recipe>();
-            while (iterator.HasMoreResults)
-            {
-                var response = await iterator.ReadNextAsync();
-                results.AddRange(response.ToList());
-            }
-
+            var results = _client.CreateDocumentQuery<Recipe>(CollectionUri,sqlExpression: "SELECT * FROM Recipes WHERE Recipes.documentType = 'Recipe'",feedOptions:new FeedOptions{EnableCrossPartitionQuery = true}).ToList();
             return results;
         }
 
         public async Task<Recipe> GetRecipeAsync(string id)
         {
+            var documentUri = UriFactory.CreateDocumentUri(_dbName, _collectionName, id);
             try
             {
-                ItemResponse<Recipe> response = await _container.ReadItemAsync<Recipe>(id, new PartitionKey(id));
-                return response.Resource;
+                var response =
+                    await _client.ReadDocumentAsync(documentUri, new RequestOptions { PartitionKey = new PartitionKey(id) });
+                return (Recipe)(dynamic)response.Resource;
             }
-            catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            catch (DocumentClientException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
                 return null;
             }
@@ -53,7 +57,7 @@ namespace RecipeManager.Services
         {
             if (ValidateRecipe(recipe))
             {
-                await _container.CreateItemAsync(recipe, new PartitionKey(recipe.Id));
+                await _client.CreateDocumentAsync(CollectionUri, recipe);
             }
         }
 
@@ -61,13 +65,14 @@ namespace RecipeManager.Services
         {
             if (ValidateRecipe(recipe))
             {
-                await _container.UpsertItemAsync(recipe, new PartitionKey(recipe.Id));
+                await _client.UpsertDocumentAsync(CollectionUri, recipe);
             }
         }
 
         public async Task DeleteRecipeAsync(string id)
         {
-            await _container.DeleteItemAsync<Recipe>(id, new PartitionKey(id));
+            var documentUri = UriFactory.CreateDocumentUri(_dbName, _collectionName, id);
+            await _client.DeleteDocumentAsync(documentUri, new RequestOptions {PartitionKey = new PartitionKey(id)});
         }
 
         private static bool ValidateRecipe(Recipe recipe)

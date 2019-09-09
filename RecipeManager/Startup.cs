@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Azure.Cosmos;
-using Microsoft.Azure.Cosmos.Fluent;
+using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RecipeManager.Services;
@@ -60,8 +54,7 @@ namespace RecipeManager
             string account = recipeDbConfig.GetSection("Account").Value;
             string key = recipeDbConfig.GetSection("Key").Value;
 
-            CosmosClientBuilder clientBuilder = new CosmosClientBuilder(account, key);
-            CosmosClient dbClient = clientBuilder.WithConnectionModeDirect().Build();
+            DocumentClient dbClient = new DocumentClient(new Uri(account), key);
             RecipeDbService recipeDbService = new RecipeDbService(dbClient, dbName, containerName);
             return recipeDbService;
         }

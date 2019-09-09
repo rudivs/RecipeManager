@@ -26,7 +26,7 @@ namespace RecipeManager.Services
         /// Add a recipe to the database
         /// </summary>
         /// <param name="recipe">The recipe to be added</param>
-        /// <exception cref="Microsoft.Azure.Cosmos.CosmosException">Throws with HttpStatusCode.Conflict when recipe with conflicting id is provided</exception>
+        /// <exception cref="Microsoft.Azure.Documents.DocumentClientException">Throws with HttpStatusCode.Conflict when recipe with conflicting id is provided</exception>
         /// <exception cref="ArgumentException">Throws with message 'Please ensure that the recipe has a valid id.' if the provided recipe id is null or empty</exception>
         /// <exception cref="ArgumentException">Throws with message 'Please ensure that the recipe has a title.' if the provided recipe title is null or empty</exception>
         /// <exception cref="ArgumentException">Throws with message 'Please ensure that the recipe has at least one step.' if the provided recipe has no steps</exception>
@@ -45,7 +45,7 @@ namespace RecipeManager.Services
         /// Delete a recipe with the provided id
         /// </summary>
         /// <param name="id">Id of recipe to delete</param>
-        /// <exception cref="Microsoft.Azure.Cosmos.CosmosException">Throws with HttpStatusCode.NotFound when non-existent id is provided</exception>
+        /// <exception cref="Microsoft.Azure.Documents.DocumentClientException">Throws with HttpStatusCode.NotFound when non-existent id is provided</exception>
         Task DeleteRecipeAsync(string id);
     }
 }

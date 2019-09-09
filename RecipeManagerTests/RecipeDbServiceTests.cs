@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.Azure.Cosmos;
-using Microsoft.Azure.Cosmos.Fluent;
+using Microsoft.Azure.Documents;
+using Microsoft.Azure.Documents.Client;
 using NUnit.Framework;
 using RecipeManager.Models;
 using RecipeManager.Services;
@@ -15,7 +15,7 @@ namespace RecipeManager.Tests
     public class RecipeDbServiceIntegrationTests
     {
         private string _dbName = "RecipeDbTest";
-        private CosmosClient _dbClient;
+        private DocumentClient _dbClient;
         private RecipeDbService _recipeTestService;
         private List<Recipe> _sampleData;
 
@@ -26,8 +26,7 @@ namespace RecipeManager.Tests
             string account = "https://localhost:8081";
             string key = "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==";
 
-            CosmosClientBuilder clientBuilder = new CosmosClientBuilder(account, key);
-            _dbClient = clientBuilder.WithConnectionModeDirect().Build();
+            _dbClient = new DocumentClient(new Uri(account), key); ;
             _recipeTestService = new RecipeDbService(_dbClient, _dbName, containerName);
 
             _sampleData = new List<Recipe>();
@@ -55,8 +54,8 @@ namespace RecipeManager.Tests
         [OneTimeTearDown]
         public void ClassCleanup()
         {
-            var response = _dbClient.GetDatabase(_dbName);
-            response.DeleteAsync().GetAwaiter().GetResult();
+            var dbUri = UriFactory.CreateDatabaseUri(_dbName);
+            _dbClient.DeleteDatabaseAsync(dbUri).GetAwaiter().GetResult();
             _dbClient.Dispose();
         }
 
@@ -79,7 +78,7 @@ namespace RecipeManager.Tests
             RecipeDbService_AddRecipeAsync_Should_Throw_CosmosException_With_Status_Code_Conflict_When_Passed_Duplicate_Recipe()
         {
             await _recipeTestService.AddRecipeAsync(_sampleData[0]);
-            var ex = Assert.ThrowsAsync<CosmosException>(async () => await _recipeTestService.AddRecipeAsync(_sampleData[0]));
+            var ex = Assert.ThrowsAsync<DocumentClientException>(async () => await _recipeTestService.AddRecipeAsync(_sampleData[0]));
             Assert.That(ex.StatusCode,Is.EqualTo(HttpStatusCode.Conflict));
             await _recipeTestService.DeleteRecipeAsync(_sampleData[0].Id);
         }
@@ -98,7 +97,7 @@ namespace RecipeManager.Tests
                 UserId = "ced4bc56-ecd4-4d47-81bb-e74c9406f282"
             };
             await _recipeTestService.AddRecipeAsync(_sampleData[0]);
-            var ex = Assert.ThrowsAsync<CosmosException>(async () => await _recipeTestService.AddRecipeAsync(testRecipe));
+            var ex = Assert.ThrowsAsync<DocumentClientException>(async () => await _recipeTestService.AddRecipeAsync(testRecipe));
             Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.Conflict));
             await _recipeTestService.DeleteRecipeAsync(_sampleData[0].Id);
         }
@@ -172,7 +171,7 @@ namespace RecipeManager.Tests
         [Test]
         public async Task RecipeDbService_DeleteRecipeAsync_Should_Throw_CosmosException_With_Status_Code_NotFound_When_Passed_Invalid_Id()
         {
-            var ex = Assert.ThrowsAsync<CosmosException>(async () =>
+            var ex = Assert.ThrowsAsync<DocumentClientException>(async () =>
                 await _recipeTestService.DeleteRecipeAsync("does_not_exist"));
             Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
         }
