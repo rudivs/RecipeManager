@@ -32,7 +32,14 @@ namespace RecipeManager.Services
         /// <exception cref="ArgumentException">Throws with message 'Please ensure that the recipe has at least one step.' if the provided recipe has no steps</exception>
         Task AddRecipeAsync(Recipe recipe);
 
-        Task UpdateRecipeAsync(string id, Recipe recipe);
+        /// <summary>
+        /// Update a recipe
+        /// </summary>
+        /// <param name="recipe">The recipe to be updated. If the recipe does not exist it will be added.</param>
+        /// <exception cref="ArgumentException">Throws with message 'Please ensure that the recipe has a valid id.' if the provided recipe id is null or empty</exception>
+        /// <exception cref="ArgumentException">Throws with message 'Please ensure that the recipe has a title.' if the provided recipe title is null or empty</exception>
+        /// <exception cref="ArgumentException">Throws with message 'Please ensure that the recipe has at least one step.' if the provided recipe has no steps</exception>
+        Task UpdateRecipeAsync(Recipe recipe);
 
         /// <summary>
         /// Delete a recipe with the provided id

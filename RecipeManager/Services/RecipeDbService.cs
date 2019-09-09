@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Linq;
@@ -56,11 +57,11 @@ namespace RecipeManager.Services
             }
         }
 
-        public async Task UpdateRecipeAsync(string id, Recipe recipe)
+        public async Task UpdateRecipeAsync(Recipe recipe)
         {
             if (ValidateRecipe(recipe))
             {
-                throw new NotImplementedException();
+                await _container.UpsertItemAsync(recipe, new PartitionKey(recipe.Id));
             }
         }
 
@@ -83,6 +84,7 @@ namespace RecipeManager.Services
             {
                 throw new ArgumentException("Please ensure that the recipe has at least one step.");
             }
+            // TODO: throw ArgumentException if userId not in db
             return true;
         }
     }

@@ -196,5 +196,48 @@ namespace RecipeManager.Tests
             await _recipeTestService.DeleteRecipeAsync(_sampleData[0].Id);
             await _recipeTestService.DeleteRecipeAsync(_sampleData[1].Id);
         }
+
+        [Test]
+        public async Task RecipeDbService_UpdateRecipeAsync_Should_Correctly_Update_Recipe()
+        {
+            var testRecipe = new Recipe
+            {
+                Id = "7288cb9e-fd10-4843-be36-b2a734216c1b",
+                Title = "Test Recipe 1 Updated",
+                Description = "Updated description for test recipe 1.",
+                RecipeSteps = new List<string> { "Recipe 1 step 1", "Recipe 1 step 2", "Recipe 1 step 3" },
+                Notes = "Recipe 1 updated notes.",
+                UserId = "ced4bc56-ecd4-4d47-81bb-e74c9406f282"
+            };
+            await _recipeTestService.AddRecipeAsync(_sampleData[0]);
+            await _recipeTestService.UpdateRecipeAsync(testRecipe);
+            var result = await _recipeTestService.GetRecipeAsync(testRecipe.Id);
+            Assert.That(result.Title, Is.EqualTo(testRecipe.Title));
+            Assert.That(result.Description,Is.EqualTo(testRecipe.Description));
+            Assert.That(result.RecipeSteps, Is.EqualTo(testRecipe.RecipeSteps));
+            Assert.That(result.Notes, Is.EqualTo(testRecipe.Notes));
+            Assert.That(result.UserId, Is.EqualTo(testRecipe.UserId));
+            await _recipeTestService.DeleteRecipeAsync(testRecipe.Id);
+        }
+
+        [Test]
+        public async Task
+            RecipeDbService_UpdateRecipeAsync_Should_Insert_Recipe_If_Id_Does_Not_Exist_In_Database()
+        {
+            var testRecipe = new Recipe
+            {
+                Id = "c4019f0e-f598-465d-b45c-eac2bdddc7f5",
+                Title = "Test Recipe",
+                Description = "This is a test description for test recipe.",
+                RecipeSteps = new List<string> { "Recipe step 1", "Recipe step 2" },
+                Notes = "Recipe notes.",
+                UserId = "dd943aa0-dcef-4ee5-bf78-d4b55ebeed67"
+            };
+
+            await _recipeTestService.UpdateRecipeAsync(testRecipe);
+            var result = await _recipeTestService.GetRecipeAsync(testRecipe.Id);
+            Assert.That(result.Id, Is.EqualTo(testRecipe.Id));
+            await _recipeTestService.DeleteRecipeAsync(testRecipe.Id);
+        }
     }
 }
