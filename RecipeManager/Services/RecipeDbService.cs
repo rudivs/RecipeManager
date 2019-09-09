@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos;
+using Microsoft.Azure.Cosmos.Linq;
 using RecipeManager.Models;
 
 namespace RecipeManager.Services
@@ -18,9 +20,19 @@ namespace RecipeManager.Services
             _container = dbClient.GetContainer(dbName, recipeContainer);
         }
 
-        public async Task<IEnumerable<Recipe>> GetRecipesAsync()
+        public async Task<List<Recipe>> GetRecipesAsync()
         {
-            throw new NotImplementedException();
+            var iterator =
+                _container.GetItemQueryIterator<Recipe>(
+                    new QueryDefinition("SELECT * FROM Recipes WHERE Recipes.documentType = 'Recipe'"));
+            var results = new List<Recipe>();
+            while (iterator.HasMoreResults)
+            {
+                var response = await iterator.ReadNextAsync();
+                results.AddRange(response.ToList());
+            }
+
+            return results;
         }
 
         public async Task<Recipe> GetRecipeAsync(string id)
@@ -38,17 +50,40 @@ namespace RecipeManager.Services
 
         public async Task AddRecipeAsync(Recipe recipe)
         {
-            await _container.CreateItemAsync(recipe,new PartitionKey(recipe.Id));
+            if (ValidateRecipe(recipe))
+            {
+                await _container.CreateItemAsync(recipe, new PartitionKey(recipe.Id));
+            }
         }
 
         public async Task UpdateRecipeAsync(string id, Recipe recipe)
         {
-            throw new NotImplementedException();
+            if (ValidateRecipe(recipe))
+            {
+                throw new NotImplementedException();
+            }
         }
 
         public async Task DeleteRecipeAsync(string id)
         {
-            throw new NotImplementedException();
+            await _container.DeleteItemAsync<Recipe>(id, new PartitionKey(id));
+        }
+
+        private static bool ValidateRecipe(Recipe recipe)
+        {
+            if (string.IsNullOrEmpty(recipe.Id))
+            {
+                throw new ArgumentException("Please ensure that the recipe has a valid id.");
+            }
+            if (string.IsNullOrEmpty(recipe.Title))
+            {
+                throw new ArgumentException("Please ensure that the recipe has a title.");
+            }
+            if (recipe.RecipeSteps == null || !recipe.RecipeSteps.Any())
+            {
+                throw new ArgumentException("Please ensure that the recipe has at least one step.");
+            }
+            return true;
         }
     }
 }

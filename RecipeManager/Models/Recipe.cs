@@ -9,6 +9,9 @@ namespace RecipeManager.Models
         [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
 
+        [JsonProperty(PropertyName = "documentType")]
+        public string DocumentType => "Recipe";
+
         [JsonProperty(PropertyName = "title")]
         public string Title { get; set; }
 
