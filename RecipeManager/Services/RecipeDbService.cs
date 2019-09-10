@@ -14,7 +14,6 @@ namespace RecipeManager.Services
         private readonly string _dbName;
         private readonly string _collectionName;
         private readonly DocumentClient _client;
-        private readonly string _partitionKeyPath = "/id";
 
         private Uri CollectionUri => UriFactory.CreateDocumentCollectionUri(_dbName, _collectionName);
 
@@ -23,18 +22,11 @@ namespace RecipeManager.Services
             _dbName = dbName;
             _collectionName = recipeContainer;
             _client = dbClient;
-            _client.CreateDatabaseIfNotExistsAsync(new Database { Id = _dbName }).GetAwaiter().GetResult();
-            DocumentCollection collectionDefinition = new DocumentCollection
-            {
-                Id = _collectionName
-            };
-            collectionDefinition.PartitionKey.Paths.Add(_partitionKeyPath);
-            _client.CreateDocumentCollectionIfNotExistsAsync(UriFactory.CreateDatabaseUri(dbName), collectionDefinition).GetAwaiter().GetResult();
         }
 
         public async Task<List<Recipe>> GetRecipesAsync()
         {
-            var results = _client.CreateDocumentQuery<Recipe>(CollectionUri,sqlExpression: "SELECT * FROM Recipes WHERE Recipes.documentType = 'Recipe'",feedOptions:new FeedOptions{EnableCrossPartitionQuery = true}).ToList();
+            var results = _client.CreateDocumentQuery<Recipe>(CollectionUri,sqlExpression: "SELECT * FROM Recipes WHERE Recipes.Type = 'Recipe'").ToList();
             return results;
         }
 
@@ -44,7 +36,7 @@ namespace RecipeManager.Services
             try
             {
                 var response =
-                    await _client.ReadDocumentAsync(documentUri, new RequestOptions { PartitionKey = new PartitionKey(id) });
+                    await _client.ReadDocumentAsync(documentUri);
                 return (Recipe)(dynamic)response.Resource;
             }
             catch (DocumentClientException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
@@ -72,7 +64,7 @@ namespace RecipeManager.Services
         public async Task DeleteRecipeAsync(string id)
         {
             var documentUri = UriFactory.CreateDocumentUri(_dbName, _collectionName, id);
-            await _client.DeleteDocumentAsync(documentUri, new RequestOptions {PartitionKey = new PartitionKey(id)});
+            await _client.DeleteDocumentAsync(documentUri);
         }
 
         private static bool ValidateRecipe(Recipe recipe)

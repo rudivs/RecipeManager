@@ -26,7 +26,13 @@ namespace RecipeManager.Tests
             string account = "https://localhost:8081";
             string key = "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==";
 
-            _dbClient = new DocumentClient(new Uri(account), key); ;
+            _dbClient = new DocumentClient(new Uri(account), key);
+            _dbClient.CreateDatabaseIfNotExistsAsync(new Database { Id = _dbName }).GetAwaiter().GetResult();
+            DocumentCollection collectionDefinition = new DocumentCollection
+            {
+                Id = containerName
+            };
+            _dbClient.CreateDocumentCollectionIfNotExistsAsync(UriFactory.CreateDatabaseUri(_dbName), collectionDefinition).GetAwaiter().GetResult();
             _recipeTestService = new RecipeDbService(_dbClient, _dbName, containerName);
 
             _sampleData = new List<Recipe>();
