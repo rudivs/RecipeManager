@@ -67,6 +67,7 @@ namespace RecipeManager
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseNodeModules(env);
             app.UseAuthentication();
 
             app.UseMvc(routes =>
