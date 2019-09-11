@@ -2,34 +2,44 @@
 @{
     ViewBag.Title = "List of Recipes";
 }
+@section Scripts {
+    <script src="~/clientapp/dist/runtime.js"></script>
+    <script src="~/clientapp/dist/polyfills.js"></script>
+    <script src="~/clientapp/dist/styles.js"></script>
+    <script src="~/clientapp/dist/vendor.js"></script>
+    <script src="~/clientapp/dist/main.js"></script>
+}
 
 <h2>List of Recipes</h2>
+<app-root></app-root>
 
-<table class="table">
-    <tr>
-        <th>@Html.DisplayNameFor(model => model.Title)</th>
-        <th></th>
-    </tr>
 
-    @foreach (var recipe in Model)
-    {
+
+@*<table class="table">
         <tr>
-            <td>@Html.DisplayFor(modelItem => recipe.Title)</td>
-            <td>
-                @Html.ActionLink("View", "View", new { id = recipe.Id })
-                @if (SignInManager.IsSignedIn(User) && recipe.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier))
-                {
-                    <span> &vert; </span>
-                    @Html.ActionLink("Edit", "Edit", new { id = recipe.Id })
-                    <span> &vert; </span>
-                    @Html.ActionLink("Delete", "Delete", new { id = recipe.Id })
-                }
-
-            </td>
+            <th>@Html.DisplayNameFor(model => model.Title)</th>
+            <th></th>
         </tr>
-    }
-</table>
 
-<p>
-    @Html.ActionLink("Add New Recipe", "Create")
-</p>
+        @foreach (var recipe in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => recipe.Title)</td>
+                <td>
+                    @Html.ActionLink("View", "View", new { id = recipe.Id })
+                    @if (SignInManager.IsSignedIn(User) && recipe.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier))
+                    {
+                        <span> &vert; </span>
+                        @Html.ActionLink("Edit", "Edit", new { id = recipe.Id })
+                        <span> &vert; </span>
+                        @Html.ActionLink("Delete", "Delete", new { id = recipe.Id })
+                    }
+
+                </td>
+            </tr>
+        }
+    </table>
+
+    <p>
+        @Html.ActionLink("Add New Recipe", "Create")
+    </p>*@
