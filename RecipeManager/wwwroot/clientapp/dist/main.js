@@ -23,6 +23,32 @@ webpackEmptyAsyncContext.id = "../$$_lazy_route_resource lazy recursive";
 
 /***/ }),
 
+/***/ "../node_modules/raw-loader/dist/cjs.js!./app/app.component.html":
+/*!***********************************************************************!*\
+  !*** ../node_modules/raw-loader/dist/cjs.js!./app/app.component.html ***!
+  \***********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ("<div class=\"row\">\r\n    <div class=\"col-md-6\">\r\n            <recipe-list></recipe-list>\r\n    </div>\r\n</div>");
+
+/***/ }),
+
+/***/ "../node_modules/raw-loader/dist/cjs.js!./app/recipes/recipeList.component.html":
+/*!**************************************************************************************!*\
+  !*** ../node_modules/raw-loader/dist/cjs.js!./app/recipes/recipeList.component.html ***!
+  \**************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ("<table class=\"table\">\r\n<tr>\r\n    <th>Recipe List</th>\r\n</tr>\r\n<tr *ngFor=\"let r of recipes\">\r\n    <td>{{r.title}}</td>\r\n</tr>\r\n</table>");
+
+/***/ }),
+
 /***/ "../node_modules/tslib/tslib.es6.js":
 /*!******************************************!*\
   !*** ../node_modules/tslib/tslib.es6.js ***!
@@ -298,20 +324,13 @@ __webpack_require__.r(__webpack_exports__);
 
 let AppComponent = class AppComponent {
     constructor() {
-        this.title = 'Recipe Manager';
+        this.title = 'Recipes';
     }
 };
 AppComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
         selector: 'app-root',
-        template: `
-    <div style="text-align:center" class="content">
-      <h1>
-        This is Angular
-      </h1>
-     </div>
-    <router-outlet></router-outlet>
-  `
+        template: tslib__WEBPACK_IMPORTED_MODULE_0__["__importDefault"](__webpack_require__(/*! raw-loader!./app.component.html */ "../node_modules/raw-loader/dist/cjs.js!./app/app.component.html")).default
     })
 ], AppComponent);
 
@@ -332,8 +351,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/platform-browser */ "../node_modules/@angular/platform-browser/fesm2015/platform-browser.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/core */ "../node_modules/@angular/core/fesm2015/core.js");
-/* harmony import */ var _app_routing_module__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./app-routing.module */ "./app/app-routing.module.ts");
-/* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./app.component */ "./app/app.component.ts");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common/http */ "../node_modules/@angular/common/fesm2015/http.js");
+/* harmony import */ var _app_routing_module__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./app-routing.module */ "./app/app-routing.module.ts");
+/* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./app.component */ "./app/app.component.ts");
+/* harmony import */ var _recipes_recipeList_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./recipes/recipeList.component */ "./app/recipes/recipeList.component.ts");
+/* harmony import */ var _shared_dataService__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./shared/dataService */ "./app/shared/dataService.ts");
+
+
+
 
 
 
@@ -344,16 +369,106 @@ let AppModule = class AppModule {
 AppModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_2__["NgModule"])({
         declarations: [
-            _app_component__WEBPACK_IMPORTED_MODULE_4__["AppComponent"]
+            _app_component__WEBPACK_IMPORTED_MODULE_5__["AppComponent"],
+            _recipes_recipeList_component__WEBPACK_IMPORTED_MODULE_6__["RecipeList"]
         ],
         imports: [
             _angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__["BrowserModule"],
-            _app_routing_module__WEBPACK_IMPORTED_MODULE_3__["AppRoutingModule"]
+            _app_routing_module__WEBPACK_IMPORTED_MODULE_4__["AppRoutingModule"],
+            _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClientModule"]
         ],
-        providers: [],
-        bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_4__["AppComponent"]]
+        providers: [
+            _shared_dataService__WEBPACK_IMPORTED_MODULE_7__["DataService"]
+        ],
+        bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_5__["AppComponent"]]
     })
 ], AppModule);
+
+
+
+/***/ }),
+
+/***/ "./app/recipes/recipeList.component.ts":
+/*!*********************************************!*\
+  !*** ./app/recipes/recipeList.component.ts ***!
+  \*********************************************/
+/*! exports provided: RecipeList */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RecipeList", function() { return RecipeList; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "../node_modules/@angular/core/fesm2015/core.js");
+/* harmony import */ var _shared_dataService__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../shared/dataService */ "./app/shared/dataService.ts");
+
+
+
+let RecipeList = class RecipeList {
+    constructor(data) {
+        this.data = data;
+        this.recipes = [];
+    }
+    ngOnInit() {
+        this.data.loadRecipes()
+            .subscribe(success => {
+            if (success) {
+                this.recipes = this.data.recipes;
+            }
+        });
+    }
+};
+RecipeList.ctorParameters = () => [
+    { type: _shared_dataService__WEBPACK_IMPORTED_MODULE_2__["DataService"] }
+];
+RecipeList = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+        selector: "recipe-list",
+        template: tslib__WEBPACK_IMPORTED_MODULE_0__["__importDefault"](__webpack_require__(/*! raw-loader!./recipeList.component.html */ "../node_modules/raw-loader/dist/cjs.js!./app/recipes/recipeList.component.html")).default
+    })
+], RecipeList);
+
+
+
+/***/ }),
+
+/***/ "./app/shared/dataService.ts":
+/*!***********************************!*\
+  !*** ./app/shared/dataService.ts ***!
+  \***********************************/
+/*! exports provided: DataService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DataService", function() { return DataService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "../node_modules/@angular/common/fesm2015/http.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/core */ "../node_modules/@angular/core/fesm2015/core.js");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs/operators */ "../node_modules/rxjs/_esm2015/operators/index.js");
+
+
+
+
+let DataService = class DataService {
+    constructor(http) {
+        this.http = http;
+        this.recipes = [];
+    }
+    loadRecipes() {
+        return this.http.get("/api/recipes")
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])((data) => {
+            this.recipes = data;
+            return true;
+        }));
+    }
+};
+DataService.ctorParameters = () => [
+    { type: _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"] }
+];
+DataService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_2__["Injectable"])()
+], DataService);
 
 
 

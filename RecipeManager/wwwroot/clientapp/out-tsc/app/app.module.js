@@ -1,20 +1,27 @@
 import * as tslib_1 from "tslib";
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { HttpClientModule } from "@angular/common/http";
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { RecipeList } from './recipes/recipeList.component';
+import { DataService } from "./shared/dataService";
 let AppModule = class AppModule {
 };
 AppModule = tslib_1.__decorate([
     NgModule({
         declarations: [
-            AppComponent
+            AppComponent,
+            RecipeList
         ],
         imports: [
             BrowserModule,
-            AppRoutingModule
+            AppRoutingModule,
+            HttpClientModule
         ],
-        providers: [],
+        providers: [
+            DataService
+        ],
         bootstrap: [AppComponent]
     })
 ], AppModule);
