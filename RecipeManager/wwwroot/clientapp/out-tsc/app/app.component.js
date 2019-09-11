@@ -11,7 +11,7 @@ AppComponent = tslib_1.__decorate([
         template: `
     <div style="text-align:center" class="content">
       <h1>
-        {{title}}
+        This is Angular
       </h1>
      </div>
     <router-outlet></router-outlet>

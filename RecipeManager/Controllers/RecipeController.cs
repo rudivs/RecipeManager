@@ -110,5 +110,11 @@ namespace RecipeManager.Controllers
             await _recipeDb.DeleteRecipeAsync(id);
             return RedirectToAction("Index");
         }
+
+        [ActionName("Angular")]
+        public IActionResult Angular()
+        {
+            return View();
+        }
     }
 }
