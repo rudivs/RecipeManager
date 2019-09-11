@@ -22,9 +22,27 @@ namespace RecipeManager.Controllers
             return View(await _recipeDb.GetRecipesAsync());
         }
 
-        public IActionResult Edit(string id)
+        [HttpPost]
+        [ActionName("Edit")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditAsync([Bind("Id, Title, Description, RecipeSteps, Notes, UserId")]
+            Recipe recipe)
         {
-            throw new NotImplementedException();
+            if (ModelState.IsValid)
+            {
+                await _recipeDb.UpdateRecipeAsync(recipe);
+                return RedirectToAction("View", new { id = recipe.Id });
+            }
+
+            return View(recipe);
+        }
+
+        [ActionName("Edit")]
+        public async Task<IActionResult> EditAsync(string id)
+        {
+            var recipe = await _recipeDb.GetRecipeAsync(id);
+
+            return View(recipe);
         }
 
         [ActionName("View")]
