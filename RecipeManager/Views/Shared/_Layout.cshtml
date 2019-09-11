@@ -5,16 +5,32 @@
     <title>Recipe Manager: @ViewBag.Title</title>
     <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/4.3.1/css/bootstrap.min.css" asp-fallback-href="~/node_modules/bootstrap/dist/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="~/css/site.css" rel="stylesheet" />
 </head>
 <body>
-    <header>Recipe Manager</header>
-    <section>
+<header>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <div class="container">
+            <a class="navbar-brand" asp-controller="Recipe" asp-action="Index">Recipe Manager</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                <partial name="_LoginPartial" />
+            </div>
+        </div>
+    </nav>
+</header>
+    <section id="main-content">
         <div class="container body-content">
             @RenderBody()
         </div>
     </section>
-<footer>
-    <p>&copy; @DateTime.Now.Year Recipe Manager</p>
+<footer class="border-top footer text-muted">
+    <div class="container">
+        &copy; @DateTime.Now.Year - Recipe Manager
+    </div>
 </footer>
 
     <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.4.1.min.js" asp-fallback-src="~/node_modules/jquery/dist/jquery.min.js"
