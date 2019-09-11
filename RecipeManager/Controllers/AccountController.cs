@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +19,7 @@ namespace RecipeManager.Controllers
             _signInManager = signInManager;
         }
 
+        [ActionName("Login")]
         public IActionResult Login()
         {
             if (this.User.Identity.IsAuthenticated)
@@ -33,7 +31,8 @@ namespace RecipeManager.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        [ActionName("Login")]
+        public async Task<IActionResult> LoginAsync(LoginViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -43,11 +42,11 @@ namespace RecipeManager.Controllers
                 {
                     if (Request.Query.ContainsKey("ReturnUrl"))
                     {
-                        Redirect(Request.Query["ReturnUrl"].First());
+                        return Redirect(Request.Query["ReturnUrl"].First());
                     }
                     else
                     {
-                        RedirectToAction("Index", "Recipe");
+                        return RedirectToAction("Index", "Recipe");
                     }
                     
                 }
@@ -55,6 +54,14 @@ namespace RecipeManager.Controllers
 
             ModelState.AddModelError("", "Failed to login");
             return View();
+        }
+
+        [HttpGet]
+        [ActionName("Logout")]
+        public async Task<IActionResult> LogoutAsync()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Recipe");
         }
     }
 }
