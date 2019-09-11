@@ -40,6 +40,10 @@
     </dl>
 </div>
 <div>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @if (SignInManager.IsSignedIn(User) && Model.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier))
+    {
+        @Html.ActionLink("Edit", "Edit", new { id = Model.Id })
+        <span> &vert; </span>
+    }
     <a asp-action="Index">Back to List</a>
 </div>

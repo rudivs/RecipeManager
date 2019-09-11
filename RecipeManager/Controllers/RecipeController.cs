@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RecipeManager.Models;
@@ -28,7 +29,12 @@ namespace RecipeManager.Controllers
         public async Task<IActionResult> EditAsync([Bind("Id, Title, Description, RecipeSteps, Notes, UserId")]
             Recipe recipe)
         {
-            if (ModelState.IsValid)
+            if (!User.Identity.IsAuthenticated || recipe.UserId != User.FindFirstValue(ClaimTypes.NameIdentifier))
+            {
+                return RedirectToAction("Index");
+            }
+
+                if (ModelState.IsValid)
             {
                 await _recipeDb.UpdateRecipeAsync(recipe);
                 return RedirectToAction("View", new { id = recipe.Id });
@@ -41,6 +47,11 @@ namespace RecipeManager.Controllers
         public async Task<IActionResult> EditAsync(string id)
         {
             var recipe = await _recipeDb.GetRecipeAsync(id);
+
+            if (!User.Identity.IsAuthenticated || recipe.UserId != User.FindFirstValue(ClaimTypes.NameIdentifier))
+            {
+                return RedirectToAction("Index");
+            }
 
             return View(recipe);
         }
@@ -69,7 +80,7 @@ namespace RecipeManager.Controllers
             if (ModelState.IsValid)
             {
                 recipe.Id = Guid.NewGuid().ToString();
-                recipe.UserId = Guid.NewGuid().ToString();  //TODO: replace with user id
+                recipe.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 await _recipeDb.AddRecipeAsync(recipe);
                 return RedirectToAction("Index");
             }
@@ -90,6 +101,12 @@ namespace RecipeManager.Controllers
         [ActionName("Delete")]
         public async Task<IActionResult> DeleteAsync(string id)
         {
+            // first check if the user owns the recipe before deleting it
+            var recipe = await _recipeDb.GetRecipeAsync(id);
+            if (!User.Identity.IsAuthenticated || recipe.UserId != User.FindFirstValue(ClaimTypes.NameIdentifier))
+            {
+                return RedirectToAction("Index");
+            }
             await _recipeDb.DeleteRecipeAsync(id);
             return RedirectToAction("Index");
         }
