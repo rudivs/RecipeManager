@@ -1,6 +1,29 @@
-﻿@{
+﻿@model IEnumerable<RecipeManager.Models.Recipe>
+@{
     ViewBag.Title = "List of Recipes";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>List of Recipes</h2>
+
+<table class="table">
+    <tr>
+        <th>@Html.DisplayNameFor(model => model.Title)</th>
+        <th></th>
+    </tr>
+    
+    @foreach (var recipe in Model)
+    {
+        <tr>
+            <td >@Html.DisplayFor(modelItem => recipe.Title)</td>
+            <td>
+                @Html.ActionLink("View","View", new {id=recipe.Id}) |
+                @Html.ActionLink("Edit", "Edit", new {id = recipe.Id}) |
+                @Html.ActionLink("Delete", "Delete", new {id = recipe.Id})
+            </td>
+        </tr>
+    }
+</table>
+
+<p>
+    @Html.ActionLink("Add New Recipe", "Create")
+</p>

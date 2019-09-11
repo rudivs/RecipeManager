@@ -13,12 +13,15 @@ namespace RecipeManager.Models
         [JsonProperty(PropertyName = "Type")]
         public string DocumentType => "Recipe";
 
+        [Required]
         [JsonProperty(PropertyName = "title")]
         public string Title { get; set; }
 
+        [Required]
         [JsonProperty(PropertyName = "description")]
         public string Description { get; set; }
 
+        [Required]
         [JsonProperty(PropertyName = "recipeSteps")]
         public List<RecipeStep> RecipeSteps { get; set; }
 

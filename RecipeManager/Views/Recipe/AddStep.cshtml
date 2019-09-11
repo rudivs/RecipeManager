@@ -1,0 +1,7 @@
+﻿@model RecipeManager.Models.Recipe
+@{
+    Layout = null;
+}
+
+@Html.EditorForMany(m => m.RecipeSteps, m =>m.Index)
+

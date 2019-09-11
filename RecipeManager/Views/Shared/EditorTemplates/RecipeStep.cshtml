@@ -1,0 +1,12 @@
+﻿@model RecipeManager.Models.RecipeStep
+
+<div class="step-editor">
+    <div class="form-group row">
+        @Html.LabelFor(m => m.Step, new { @class = "col-sm-1 col-form-label" })
+        <div class="col-sm-9">
+            @Html.TextBoxFor(m => m.Step, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Step, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-sm-2"><a href="#" class="delete-step">delete</a></div>
+    </div>
+</div>
