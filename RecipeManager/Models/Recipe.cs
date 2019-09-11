@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 
 namespace RecipeManager.Models
@@ -19,12 +20,20 @@ namespace RecipeManager.Models
         public string Description { get; set; }
 
         [JsonProperty(PropertyName = "recipeSteps")]
-        public List<string> RecipeSteps { get; set; }
+        public List<RecipeStep> RecipeSteps { get; set; }
 
         [JsonProperty(PropertyName = "notes")]
         public string Notes { get; set; }
 
         [JsonProperty(PropertyName = "userId")]
         public string UserId { get; set; }
+    }
+
+    public class RecipeStep
+    {
+        [Required]
+        [JsonProperty(PropertyName = "step")]
+        public string Step { get; set; }
+        public string Index { get; set; }
     }
 }

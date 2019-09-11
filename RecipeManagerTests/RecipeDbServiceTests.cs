@@ -5,6 +5,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using RecipeManager.Models;
 using RecipeManager.Services;
@@ -18,6 +19,13 @@ namespace RecipeManager.Tests
         private DocumentClient _dbClient;
         private RecipeDbService _recipeTestService;
         private List<Recipe> _sampleData;
+
+        public static void AreEqualByJson(object expected, object actual)
+        {
+            var expectedJson = JsonConvert.SerializeObject(expected);
+            var actualJson = JsonConvert.SerializeObject(actual);
+            Assert.AreEqual(expectedJson, actualJson);
+        }
 
         [OneTimeSetUp]
         public void ClassInit()
@@ -42,7 +50,7 @@ namespace RecipeManager.Tests
                     Id = "7288cb9e-fd10-4843-be36-b2a734216c1b",
                     Title = "Test Recipe 1",
                     Description = "This is a test description for test recipe 1.",
-                    RecipeSteps = new List<string> { "Recipe 1 step 1", "Recipe 1 step 2" },
+                    RecipeSteps = new List<RecipeStep> {new RecipeStep {Step = "Recipe 1 step 1"}, new RecipeStep {Step = "Recipe 1 step 2" }},
                     Notes = "Recipe 1 notes.",
                     UserId = "ced4bc56-ecd4-4d47-81bb-e74c9406f282"
                 });
@@ -52,7 +60,7 @@ namespace RecipeManager.Tests
                     Id = "658e9a3b-524c-4b6d-a7ce-23ef521d7e3d",
                     Title = "Test Recipe 2",
                     Description = "This is a test description for test recipe 2 which has no notes.",
-                    RecipeSteps = new List<string> {"Recipe 2 step 1", "Recipe 2 step 2"},
+                    RecipeSteps = new List<RecipeStep> {new RecipeStep{ Step = "Recipe 2 step 1"}, new RecipeStep {Step = "Recipe 2 step 2"}},
                     UserId = "2152b7e8-9ce1-4b70-854f-b0463bbf640a"
                 });
         }
@@ -70,12 +78,7 @@ namespace RecipeManager.Tests
         {
             await _recipeTestService.AddRecipeAsync(_sampleData[0]);
             var result = await _recipeTestService.GetRecipeAsync(_sampleData[0].Id);
-            Assert.That(result.Id,Is.EqualTo(_sampleData[0].Id));
-            Assert.That(result.Description,Is.EqualTo(_sampleData[0].Description));
-            Assert.That(result.Notes,Is.EqualTo(_sampleData[0].Notes));
-            Assert.That(result.RecipeSteps,Is.EqualTo(_sampleData[0].RecipeSteps));
-            Assert.That(result.Title,Is.EqualTo(_sampleData[0].Title));
-            Assert.That(result.UserId,Is.EqualTo(_sampleData[0].UserId));
+            AreEqualByJson(_sampleData[0],result);
             await _recipeTestService.DeleteRecipeAsync(_sampleData[0].Id);
         }
 
@@ -98,7 +101,7 @@ namespace RecipeManager.Tests
                 Id = "7288cb9e-fd10-4843-be36-b2a734216c1b",
                 Title = "Conflicting Recipe",
                 Description = "Conflicting recipe description.",
-                RecipeSteps = new List<string> { "step 1", "step 2" },
+                RecipeSteps = new List<RecipeStep> { new RecipeStep{Step = "step 1"}, new RecipeStep{Step = "step 2" }},
                 Notes = "Conflicting recipe notes.",
                 UserId = "ced4bc56-ecd4-4d47-81bb-e74c9406f282"
             };
@@ -115,7 +118,7 @@ namespace RecipeManager.Tests
             {
                 Title = "Invalid Recipe",
                 Description = "Invalid recipe description.",
-                RecipeSteps = new List<string> { "step 1", "step 2" },
+                RecipeSteps = new List<RecipeStep> { new RecipeStep { Step = "step 1" }, new RecipeStep { Step = "step 2" } },
                 Notes = "Invalid recipe notes.",
                 UserId = "ced4bc56-ecd4-4d47-81bb-e74c9406f282"
             };
@@ -131,7 +134,7 @@ namespace RecipeManager.Tests
             {
                 Id = "dc5162a5-9a27-4b52-81e8-ae2abff33bbb",
                 Description = "Invalid recipe description.",
-                RecipeSteps = new List<string> { "step 1", "step 2" },
+                RecipeSteps = new List<RecipeStep> { new RecipeStep { Step = "step 1" }, new RecipeStep { Step = "step 2" } },
                 Notes = "Invalid recipe notes.",
                 UserId = "ced4bc56-ecd4-4d47-81bb-e74c9406f282"
             };
@@ -148,7 +151,7 @@ namespace RecipeManager.Tests
                 Id = "dc5162a5-9a27-4b52-81e8-ae2abff33bbb",
                 Title = "Invalid Recipe",
                 Description = "Invalid recipe description.",
-                RecipeSteps = new List<string>( ),
+                RecipeSteps = new List<RecipeStep>( ),
                 Notes = "Invalid recipe notes.",
                 UserId = "ced4bc56-ecd4-4d47-81bb-e74c9406f282"
             };
@@ -210,18 +213,14 @@ namespace RecipeManager.Tests
                 Id = "7288cb9e-fd10-4843-be36-b2a734216c1b",
                 Title = "Test Recipe 1 Updated",
                 Description = "Updated description for test recipe 1.",
-                RecipeSteps = new List<string> { "Recipe 1 step 1", "Recipe 1 step 2", "Recipe 1 step 3" },
+                RecipeSteps = new List<RecipeStep> { new RecipeStep { Step = "step 1" }, new RecipeStep { Step = "step 2" }, new RecipeStep { Step = "step 3" } },
                 Notes = "Recipe 1 updated notes.",
                 UserId = "ced4bc56-ecd4-4d47-81bb-e74c9406f282"
             };
             await _recipeTestService.AddRecipeAsync(_sampleData[0]);
             await _recipeTestService.UpdateRecipeAsync(testRecipe);
             var result = await _recipeTestService.GetRecipeAsync(testRecipe.Id);
-            Assert.That(result.Title, Is.EqualTo(testRecipe.Title));
-            Assert.That(result.Description,Is.EqualTo(testRecipe.Description));
-            Assert.That(result.RecipeSteps, Is.EqualTo(testRecipe.RecipeSteps));
-            Assert.That(result.Notes, Is.EqualTo(testRecipe.Notes));
-            Assert.That(result.UserId, Is.EqualTo(testRecipe.UserId));
+            AreEqualByJson(testRecipe,result);
             await _recipeTestService.DeleteRecipeAsync(testRecipe.Id);
         }
 
@@ -234,7 +233,7 @@ namespace RecipeManager.Tests
                 Id = "c4019f0e-f598-465d-b45c-eac2bdddc7f5",
                 Title = "Test Recipe",
                 Description = "This is a test description for test recipe.",
-                RecipeSteps = new List<string> { "Recipe step 1", "Recipe step 2" },
+                RecipeSteps = new List<RecipeStep> { new RecipeStep { Step = "step 1" }, new RecipeStep { Step = "step 2" } },
                 Notes = "Recipe notes.",
                 UserId = "dd943aa0-dcef-4ee5-bf78-d4b55ebeed67"
             };
