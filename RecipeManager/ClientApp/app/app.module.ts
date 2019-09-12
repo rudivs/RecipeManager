@@ -5,12 +5,14 @@ import { HttpClientModule } from "@angular/common/http"
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { RecipeList } from './recipes/recipeList.component'
+import { RecipeViewer } from './recipes/recipeViewer.component'
 import { DataService } from "./shared/dataService";
 
 @NgModule({
     declarations: [
         AppComponent,
-        RecipeList
+        RecipeList,
+        RecipeViewer
     ],
     imports: [
         BrowserModule,

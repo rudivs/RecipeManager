@@ -32,7 +32,7 @@ webpackEmptyAsyncContext.id = "../$$_lazy_route_resource lazy recursive";
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<div class=\"row\">\r\n    <div class=\"col-md-6\">\r\n            <recipe-list></recipe-list>\r\n    </div>\r\n</div>");
+/* harmony default export */ __webpack_exports__["default"] = ("<div class=\"row\">\r\n    <div class=\"col-md-6\">\r\n        <recipe-list></recipe-list>\r\n    </div>\r\n    <div class=\"col-md-6\">\r\n        <recipe-viewer></recipe-viewer>\r\n    </div>\r\n</div>");
 
 /***/ }),
 
@@ -46,6 +46,19 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ("<table class=\"table\">\r\n<tr>\r\n    <th>Recipe List</th>\r\n</tr>\r\n<tr *ngFor=\"let r of recipes\">\r\n    <td>{{r.title}}</td>\r\n</tr>\r\n</table>");
+
+/***/ }),
+
+/***/ "../node_modules/raw-loader/dist/cjs.js!./app/recipes/recipeViewer.component.html":
+/*!****************************************************************************************!*\
+  !*** ../node_modules/raw-loader/dist/cjs.js!./app/recipes/recipeViewer.component.html ***!
+  \****************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ("<div class=\"card\" id=\"recipe-viewer\">\r\n    <div class=\"card-body\">\r\n        <h2>Recipe Title</h2>\r\n        <p class=\"lead\">Description of the recipe</p>\r\n        <p><strong>Steps:</strong></p>\r\n        <ol>\r\n            <li>First recipe step</li>\r\n            <li>Second recipe step</li>\r\n            <li>Etc.</li>\r\n        </ol>\r\n        <p><strong>Notes:</strong></p>\r\n        <p>Optional notes</p>\r\n    </div>\r\n</div>");
 
 /***/ }),
 
@@ -355,7 +368,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _app_routing_module__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./app-routing.module */ "./app/app-routing.module.ts");
 /* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./app.component */ "./app/app.component.ts");
 /* harmony import */ var _recipes_recipeList_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./recipes/recipeList.component */ "./app/recipes/recipeList.component.ts");
-/* harmony import */ var _shared_dataService__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./shared/dataService */ "./app/shared/dataService.ts");
+/* harmony import */ var _recipes_recipeViewer_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./recipes/recipeViewer.component */ "./app/recipes/recipeViewer.component.ts");
+/* harmony import */ var _shared_dataService__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./shared/dataService */ "./app/shared/dataService.ts");
+
 
 
 
@@ -370,7 +385,8 @@ AppModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_2__["NgModule"])({
         declarations: [
             _app_component__WEBPACK_IMPORTED_MODULE_5__["AppComponent"],
-            _recipes_recipeList_component__WEBPACK_IMPORTED_MODULE_6__["RecipeList"]
+            _recipes_recipeList_component__WEBPACK_IMPORTED_MODULE_6__["RecipeList"],
+            _recipes_recipeViewer_component__WEBPACK_IMPORTED_MODULE_7__["RecipeViewer"]
         ],
         imports: [
             _angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__["BrowserModule"],
@@ -378,7 +394,7 @@ AppModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
             _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClientModule"]
         ],
         providers: [
-            _shared_dataService__WEBPACK_IMPORTED_MODULE_7__["DataService"]
+            _shared_dataService__WEBPACK_IMPORTED_MODULE_8__["DataService"]
         ],
         bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_5__["AppComponent"]]
     })
@@ -427,6 +443,33 @@ RecipeList = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         template: tslib__WEBPACK_IMPORTED_MODULE_0__["__importDefault"](__webpack_require__(/*! raw-loader!./recipeList.component.html */ "../node_modules/raw-loader/dist/cjs.js!./app/recipes/recipeList.component.html")).default
     })
 ], RecipeList);
+
+
+
+/***/ }),
+
+/***/ "./app/recipes/recipeViewer.component.ts":
+/*!***********************************************!*\
+  !*** ./app/recipes/recipeViewer.component.ts ***!
+  \***********************************************/
+/*! exports provided: RecipeViewer */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RecipeViewer", function() { return RecipeViewer; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "../node_modules/@angular/core/fesm2015/core.js");
+
+
+let RecipeViewer = class RecipeViewer {
+};
+RecipeViewer = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+        selector: "recipe-viewer",
+        template: tslib__WEBPACK_IMPORTED_MODULE_0__["__importDefault"](__webpack_require__(/*! raw-loader!./recipeViewer.component.html */ "../node_modules/raw-loader/dist/cjs.js!./app/recipes/recipeViewer.component.html")).default
+    })
+], RecipeViewer);
 
 
 
