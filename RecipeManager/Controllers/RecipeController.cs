@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RecipeManager.Models;
 using RecipeManager.Services;
@@ -26,6 +27,7 @@ namespace RecipeManager.Controllers
         [HttpPost]
         [ActionName("Edit")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> EditAsync([Bind("Id, Title, Description, RecipeSteps, Notes, UserId")]
             Recipe recipe)
         {
@@ -44,6 +46,7 @@ namespace RecipeManager.Controllers
         }
 
         [ActionName("Edit")]
+        [Authorize]
         public async Task<IActionResult> EditAsync(string id)
         {
             var recipe = await _recipeDb.GetRecipeAsync(id);
@@ -64,6 +67,7 @@ namespace RecipeManager.Controllers
         }
 
         [ActionName("Create")]
+        [Authorize]
         public IActionResult Create()
         {
             var recipe = new Recipe();
@@ -74,6 +78,7 @@ namespace RecipeManager.Controllers
         [HttpPost]
         [ActionName("Create")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<ActionResult> CreateAsync([Bind("Id,Title,Description,RecipeSteps,Notes,UserId")]
             Recipe recipe)
         {
@@ -99,6 +104,7 @@ namespace RecipeManager.Controllers
         }
 
         [ActionName("Delete")]
+        [Authorize]
         public async Task<IActionResult> DeleteAsync(string id)
         {
             // first check if the user owns the recipe before deleting it
