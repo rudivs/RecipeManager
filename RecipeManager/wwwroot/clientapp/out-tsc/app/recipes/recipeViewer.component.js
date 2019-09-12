@@ -4,6 +4,16 @@ let RecipeViewer = class RecipeViewer {
     constructor(data) {
         this.data = data;
     }
+    ngOnInit() {
+        this.data.loadRecipes()
+            .subscribe(success => {
+            if (success) {
+                if (this.data.recipes.length > 0) {
+                    this.data.loadRecipe(this.data.recipes[0]);
+                }
+            }
+        });
+    }
 };
 RecipeViewer = tslib_1.__decorate([
     Component({

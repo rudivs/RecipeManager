@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
@@ -36,8 +37,10 @@ namespace RecipeManager
             services.AddSingleton<IRecipeDbService>(recipeDbService);
 
             services.AddIdentity<RecipeUser, IdentityRole>()
+                .AddDefaultUI(UIFramework.Bootstrap4)
                 .RegisterDocumentDBStores<RecipeUser, IdentityRole>(dbClient,
-                    (p) => _collection);
+                    (p) => _collection)
+                .AddDefaultTokenProviders();
             services.AddLogging();
 
 // TODO: Remove after adding registration support
