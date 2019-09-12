@@ -475,7 +475,6 @@ let RecipeViewer = class RecipeViewer {
         this.data.loadRecipes()
             .subscribe(success => {
             if (success) {
-                this.recipes = this.data.recipes;
                 if (this.data.recipes.length > 0) {
                     this.data.loadRecipe(this.data.recipes[0]);
                 }

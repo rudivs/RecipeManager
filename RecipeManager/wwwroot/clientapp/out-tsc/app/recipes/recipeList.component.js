@@ -13,6 +13,9 @@ let RecipeList = class RecipeList {
             }
         });
     }
+    viewRecipe(recipe) {
+        this.data.loadRecipe(recipe);
+    }
 };
 RecipeList = tslib_1.__decorate([
     Component({
