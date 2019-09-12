@@ -1,8 +1,12 @@
-﻿<table class="table">
-<tr>
-    <th>Recipe List</th>
-</tr>
-<tr class="recipe-item" *ngFor="let r of recipes" (click)="viewRecipe(r)">
-    <td>{{r.title}}</td>
-</tr>
+﻿<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>Recipe List</th>
+    </tr>
+    </thead>
+    <tbody>
+        <tr class="recipe-item" *ngFor="let r of recipes" (click)="viewRecipe(r)">
+            <td>{{r.title}}</td>
+        </tr>
+    </tbody>
 </table>

@@ -9,3 +9,7 @@
 tr.recipe-item {
     cursor: pointer;
 }
+
+table.table-hover tbody tr td:hover {
+    background-color: whitesmoke;
+}

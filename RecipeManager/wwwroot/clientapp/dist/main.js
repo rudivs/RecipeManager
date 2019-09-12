@@ -45,7 +45,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<table class=\"table\">\r\n<tr>\r\n    <th>Recipe List</th>\r\n</tr>\r\n<tr class=\"recipe-item\" *ngFor=\"let r of recipes\" (click)=\"viewRecipe(r)\">\r\n    <td>{{r.title}}</td>\r\n</tr>\r\n</table>");
+/* harmony default export */ __webpack_exports__["default"] = ("<table class=\"table table-hover\">\r\n    <thead>\r\n    <tr>\r\n        <th>Recipe List</th>\r\n    </tr>\r\n    </thead>\r\n    <tbody>\r\n        <tr class=\"recipe-item\" *ngFor=\"let r of recipes\" (click)=\"viewRecipe(r)\">\r\n            <td>{{r.title}}</td>\r\n        </tr>\r\n    </tbody>\r\n</table>");
 
 /***/ }),
 
