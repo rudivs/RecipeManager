@@ -45,7 +45,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<table class=\"table\">\r\n<tr>\r\n    <th>Recipe List</th>\r\n</tr>\r\n<tr *ngFor=\"let r of recipes\">\r\n    <td>{{r.title}}</td>\r\n</tr>\r\n</table>");
+/* harmony default export */ __webpack_exports__["default"] = ("<table class=\"table\">\r\n<tr>\r\n    <th>Recipe List</th>\r\n</tr>\r\n<tr class=\"recipe-item\" *ngFor=\"let r of recipes\" (click)=\"viewRecipe(r)\">\r\n    <td>{{r.title}}</td>\r\n</tr>\r\n</table>");
 
 /***/ }),
 
@@ -58,7 +58,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<div class=\"card\" id=\"recipe-viewer\">\r\n    <div class=\"card-body\">\r\n        <h2>Recipe Title</h2>\r\n        <p class=\"lead\">Description of the recipe</p>\r\n        <p><strong>Steps:</strong></p>\r\n        <ol>\r\n            <li>First recipe step</li>\r\n            <li>Second recipe step</li>\r\n            <li>Etc.</li>\r\n        </ol>\r\n        <p><strong>Notes:</strong></p>\r\n        <p>Optional notes</p>\r\n    </div>\r\n</div>");
+/* harmony default export */ __webpack_exports__["default"] = ("<div class=\"card\" id=\"recipe-viewer\">\r\n    <div class=\"card-body\">\r\n        <h2>{{ data.currentRecipe.title }} </h2>\r\n        <p class=\"lead\">{{ data.currentRecipe.description }}</p>\r\n        <p><strong>Steps:</strong></p>\r\n        <ol>\r\n            <li *ngFor=\"let s of data.currentRecipe.recipeSteps\">{{s.step}}</li>\r\n        </ol>\r\n        <p><strong>Notes:</strong></p>\r\n        <p>{{ data.currentRecipe.notes }}</p>\r\n    </div>\r\n</div>");
 
 /***/ }),
 
@@ -433,6 +433,9 @@ let RecipeList = class RecipeList {
             }
         });
     }
+    viewRecipe(recipe) {
+        this.data.loadRecipe(recipe);
+    }
 };
 RecipeList.ctorParameters = () => [
     { type: _shared_dataService__WEBPACK_IMPORTED_MODULE_2__["DataService"] }
@@ -460,10 +463,29 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RecipeViewer", function() { return RecipeViewer; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "../node_modules/@angular/core/fesm2015/core.js");
+/* harmony import */ var _shared_dataService__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../shared/dataService */ "./app/shared/dataService.ts");
+
 
 
 let RecipeViewer = class RecipeViewer {
+    constructor(data) {
+        this.data = data;
+    }
+    ngOnInit() {
+        this.data.loadRecipes()
+            .subscribe(success => {
+            if (success) {
+                this.recipes = this.data.recipes;
+                if (this.data.recipes.length > 0) {
+                    this.data.loadRecipe(this.data.recipes[0]);
+                }
+            }
+        });
+    }
 };
+RecipeViewer.ctorParameters = () => [
+    { type: _shared_dataService__WEBPACK_IMPORTED_MODULE_2__["DataService"] }
+];
 RecipeViewer = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
         selector: "recipe-viewer",
@@ -489,6 +511,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "../node_modules/@angular/common/fesm2015/http.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/core */ "../node_modules/@angular/core/fesm2015/core.js");
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs/operators */ "../node_modules/rxjs/_esm2015/operators/index.js");
+/* harmony import */ var _recipes__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./recipes */ "./app/shared/recipes.ts");
+
 
 
 
@@ -497,6 +521,7 @@ let DataService = class DataService {
     constructor(http) {
         this.http = http;
         this.recipes = [];
+        this.currentRecipe = new _recipes__WEBPACK_IMPORTED_MODULE_4__["Recipe"];
     }
     loadRecipes() {
         return this.http.get("/api/recipes")
@@ -504,6 +529,14 @@ let DataService = class DataService {
             this.recipes = data;
             return true;
         }));
+    }
+    loadRecipe(recipe) {
+        this.currentRecipe = recipe;
+    }
+    ngOnInit() {
+        if (this.recipes.length > 0) {
+            this.currentRecipe = this.recipes[0];
+        }
     }
 };
 DataService.ctorParameters = () => [
@@ -513,6 +546,30 @@ DataService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_2__["Injectable"])()
 ], DataService);
 
+
+
+/***/ }),
+
+/***/ "./app/shared/recipes.ts":
+/*!*******************************!*\
+  !*** ./app/shared/recipes.ts ***!
+  \*******************************/
+/*! exports provided: RecipeStep, Recipe */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RecipeStep", function() { return RecipeStep; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Recipe", function() { return Recipe; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../node_modules/tslib/tslib.es6.js");
+
+class RecipeStep {
+}
+class Recipe {
+    constructor() {
+        this.recipeSteps = new Array();
+    }
+}
 
 
 /***/ }),

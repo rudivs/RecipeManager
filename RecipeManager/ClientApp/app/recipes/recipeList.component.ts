@@ -22,4 +22,8 @@ export class RecipeList implements OnInit {
                 }
             });
     }
+
+    viewRecipe(recipe: Recipe) {
+        this.data.loadRecipe(recipe);
+    }
 }

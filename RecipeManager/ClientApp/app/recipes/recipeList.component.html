@@ -2,7 +2,7 @@
 <tr>
     <th>Recipe List</th>
 </tr>
-<tr *ngFor="let r of recipes">
+<tr class="recipe-item" *ngFor="let r of recipes" (click)="viewRecipe(r)">
     <td>{{r.title}}</td>
 </tr>
 </table>

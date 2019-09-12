@@ -5,3 +5,7 @@
 #recipe-viewer {
     min-height: 83vh;
 }
+
+tr.recipe-item {
+    cursor: pointer;
+}

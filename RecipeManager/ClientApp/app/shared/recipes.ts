@@ -1,14 +1,14 @@
-﻿export interface RecipeStep {
+﻿export class RecipeStep {
     step: string;
     index: string;
 }
 
-export interface Recipe {
+export class Recipe {
     id: string;
     Type: string;
     title: string;
     description: string;
-    recipeSteps: RecipeStep[];
+    recipeSteps: Array<RecipeStep> = new Array<RecipeStep>();
     notes: string;
     userId: string;
 }
