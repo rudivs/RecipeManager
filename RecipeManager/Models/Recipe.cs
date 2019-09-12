@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 
@@ -23,6 +24,7 @@ namespace RecipeManager.Models
 
         [Required]
         [JsonProperty(PropertyName = "recipeSteps")]
+        [DisplayName("Steps")]
         public List<RecipeStep> RecipeSteps { get; set; }
 
         [JsonProperty(PropertyName = "notes")]
