@@ -1,5 +1,6 @@
 ﻿import { Component, OnInit } from "@angular/core";
 import { DataService } from "../shared/dataService"
+import { Recipe, RecipeStep } from "../shared/recipes"
 
 @Component({
     selector: "recipe-list",
@@ -11,7 +12,7 @@ export class RecipeList implements OnInit {
     constructor(private data: DataService) {
     }
 
-    public recipes = [];
+    public recipes : Recipe[] = [];
 
     ngOnInit(): void {
         this.data.loadRecipes()
